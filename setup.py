@@ -7,7 +7,7 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='RS_vs_PS',
+    name='nonogram_from_image',
     version='0.1',
     description='Get nonogram as array from image',
     long_description=readme,
