@@ -22,9 +22,6 @@ def transform_image(image):
     # find contours
     contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-    # draws contours
-    cv2.drawContours(image, contours, -1, 255, 3)
-
     # finds largest contour
     c = max(contours, key=cv2.contourArea)
     x, y, w, h = cv2.boundingRect(c)
@@ -32,8 +29,7 @@ def transform_image(image):
     # creates image with contour
     cropped_image = image[y:y+h,x:x+w]
 
-    # image_with_contour = cv2.rectangle(image, (x, y),(x+w, y+h), (0, 255, 0), 2)
-
+    # write image
     cv2.imwrite("tests/output_images/edge.jpg", cropped_image)
 
     return image
