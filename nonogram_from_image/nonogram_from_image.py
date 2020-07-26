@@ -27,7 +27,7 @@ def transform_image(image):
     x, y, w, h = cv2.boundingRect(c)
 
     # creates image with contour
-    cropped_image = image[y:y+h,x:x+w]
+    cropped_image = image[y:y+h, x:x+w]
 
     # write image
     cv2.imwrite("tests/output_images/edge.jpg", cropped_image)
