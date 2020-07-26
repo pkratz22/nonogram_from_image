@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 
 
 def get_image(path):
@@ -7,7 +8,12 @@ def get_image(path):
     return cv2.imread(path)
 
 
-def transform_image(image):
+def get_image_name(path):
+    """Get image name"""
+    return os.path.basename(path)
+
+
+def transform_image(image, image_name):
     """Transform image to detect edges"""
 
     # make image gray
@@ -31,12 +37,12 @@ def transform_image(image):
     cropped_image = image[y:y + h, x:x + w]
 
     # write image
-    cv2.imwrite("tests/output_images/edge.jpg", cropped_image)
+    cv2.imwrite("tests/output_images/cropped/{name}".format(name=image_name), cropped_image)
 
     return cropped_image
 
 
-def get_top_left_rectange(image):
+def get_top_left_rectange(image, image_name):
     """Given the image of the puzzle area, return number for columns"""
 
     # base transformations
@@ -50,7 +56,7 @@ def get_top_left_rectange(image):
     opening = cv2.morphologyEx(thresh_img, cv2.MORPH_OPEN, kernel_opening)
     #closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel_closing)
 
-    cv2.imwrite("tests/output_images/columns.jpg", opening)
+    cv2.imwrite("tests/output_images/further_edits/{name}".format(name=image_name), opening)
 
     return opening
 
@@ -63,5 +69,6 @@ def get_row_region(image):
 if __name__ == "__main__":
     image_path = input("Please enter path to image file: ")
     image = get_image(image_path)
-    transformed_image = transform_image(image)
-    top_left_rectangle = get_top_left_rectange(transformed_image)
+    image_name = get_image_name(image_path)
+    transformed_image = transform_image(image, image_name)
+    top_left_rectangle = get_top_left_rectange(transformed_image, image_name)
