@@ -61,11 +61,6 @@ def get_top_left_rectange(image, image_name):
     return opening
 
 
-def get_row_region(image):
-    """Given the image of the puzzle area, return number for rows"""
-    pass
-
-
 if __name__ == "__main__":
     image_path = input("Please enter path to image file: ")
     image = get_image(image_path)
