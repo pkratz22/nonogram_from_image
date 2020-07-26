@@ -9,28 +9,32 @@ def get_image(path):
 
 def transform_image(image):
     """Transform image to detect edges"""
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    kernel = np.ones((5, 5), np.uint8)
-    opening = cv2.morphologyEx(gray, cv2.MORPH_OPEN, kernel)
     
-    image_blurred = cv2.GaussianBlur(opening, (3, 3), 0)
+    # make image gray
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+    # apply Gaussian Blur to reduce noise
+    image_blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 
+    # get edges using Canny method
     edges = cv2.Canny(image_blurred, 100, 300, apertureSize=3)
 
-    contours, hierarchy = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    contour_sizes = [(cv2.contourArea(contour), contour) for contour in contours]
+    # find contours
+    contours, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-    biggest_contour = max(contour_sizes, key=lambda x: x[0])[1]
-
+    # draws contours
     cv2.drawContours(image, contours, -1, 255, 3)
 
-    c = max(contours, key = cv2.contourArea)
-    x,y,w,h = cv2.boundingRect(c)
+    # finds largest contour
+    c = max(contours, key=cv2.contourArea)
+    x, y, w, h = cv2.boundingRect(c)
 
-    image_with_contour = cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,0),2)
+    # creates image with contour
+    cropped_image = image[y:y+h,x:x+w]
 
-    cv2.imwrite("tests/output_images/edge.jpg", image_with_contour)
+    # image_with_contour = cv2.rectangle(image, (x, y),(x+w, y+h), (0, 255, 0), 2)
+
+    cv2.imwrite("tests/output_images/edge.jpg", cropped_image)
 
     return image
 
