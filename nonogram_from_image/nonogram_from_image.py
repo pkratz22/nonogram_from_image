@@ -41,8 +41,7 @@ def get_column_region(image):
 
     # base transformations
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    inverted_gray = cv2.bitwise_not(gray)
-    image_blurred = cv2.GaussianBlur(inverted_gray, (5, 5), 0)
+    image_blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 
     _, thresh_img = cv2.threshold(image_blurred, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
 
@@ -55,15 +54,14 @@ def get_column_region(image):
     threshold = 15
     min_line_length = 50
     max_line_gap = 20
-    line_image = np.copy(image) * 0
 
     lines = cv2.HoughLinesP(edges, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
 
     for line in lines:
         for x1, y1, x2, y2 in line:
-            cv2.line(line_image, (x1, y1), (x2, y2), (255, 0, 0), 5)
+            cv2.line(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
 
-    cv2.imwrite("tests/output_images/columns.jpg", edges)
+    cv2.imwrite("tests/output_images/columns.jpg", image)
 
     return edges
 
