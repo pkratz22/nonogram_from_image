@@ -36,7 +36,7 @@ def transform_image(image):
     return cropped_image
 
 
-def get_column_region(image):
+def get_top_left_rectange(image):
     """Given the image of the puzzle area, return number for columns"""
 
     # base transformations
@@ -48,29 +48,11 @@ def get_column_region(image):
     kernel_opening = np.ones((5, 5), np.uint8)
     kernel_closing = np.ones((5, 20), np.uint8)
     opening = cv2.morphologyEx(thresh_img, cv2.MORPH_OPEN, kernel_opening)
-    closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel_closing)
+    #closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel_closing)
 
-    binary = cv2.bitwise_not(closing)
+    cv2.imwrite("tests/output_images/columns.jpg", opening)
 
-    (contours, _) = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-
-    (x, y, w, h) = cv2.boundingRect(contours[0])
-
-    for contour in contours:
-        (temp_x, temp_y, temp_w, temp_h) = cv2.boundingRect(contour)
-        if temp_x < x:
-            x = temp_x
-        if temp_y < y:
-            y = temp_y
-    
-    for contour in contours:
-        (temp_x, temp_y, temp_w, temp_h) = cv2.boundingRect(contour)
-        if(temp_x == x and temp_y == y):
-            cv2.rectangle(image, (temp_x, temp_y), (temp_x+temp_w, temp_y+temp_h), (0, 255, 0), 2)
-
-    cv2.imwrite("tests/output_images/columns.jpg", image)
-
-    return image
+    return opening
 
 
 def get_row_region(image):
@@ -82,4 +64,4 @@ if __name__ == "__main__":
     image_path = input("Please enter path to image file: ")
     image = get_image(image_path)
     transformed_image = transform_image(image)
-    column_region = get_column_region(transformed_image)
+    top_left_rectangle = get_top_left_rectange(transformed_image)
