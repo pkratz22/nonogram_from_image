@@ -50,9 +50,27 @@ def get_column_region(image):
     opening = cv2.morphologyEx(thresh_img, cv2.MORPH_OPEN, kernel_opening)
     closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel_closing)
 
-    cv2.imwrite("tests/output_images/columns.jpg", closing)
+    binary = cv2.bitwise_not(closing)
 
-    return closing
+    (contours, _) = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    (x, y, w, h) = cv2.boundingRect(contours[0])
+
+    for contour in contours:
+        (temp_x, temp_y, temp_w, temp_h) = cv2.boundingRect(contour)
+        if temp_x < x:
+            x = temp_x
+        if temp_y < y:
+            y = temp_y
+    
+    for contour in contours:
+        (temp_x, temp_y, temp_w, temp_h) = cv2.boundingRect(contour)
+        if(temp_x == x and temp_y == y):
+            cv2.rectangle(image, (temp_x, temp_y), (temp_x+temp_w, temp_y+temp_h), (0, 255, 0), 2)
+
+    cv2.imwrite("tests/output_images/columns.jpg", image)
+
+    return image
 
 
 def get_row_region(image):
