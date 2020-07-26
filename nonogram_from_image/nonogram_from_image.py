@@ -33,10 +33,48 @@ def transform_image(image):
     # write image
     cv2.imwrite("tests/output_images/edge.jpg", cropped_image)
 
-    return image
+    return cropped_image
+
+
+def get_column_region(image):
+    """Given the image of the puzzle area, return number for columns"""
+
+    # base transformations
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    inverted_gray = cv2.bitwise_not(gray)
+    image_blurred = cv2.GaussianBlur(inverted_gray, (5, 5), 0)
+
+    _, thresh_img = cv2.threshold(image_blurred, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
+
+    low_threshold = 50
+    high_threshold = 150
+    edges = cv2.Canny(thresh_img, low_threshold, high_threshold)
+
+    rho = 1
+    theta = np.pi / 180
+    threshold = 15
+    min_line_length = 50
+    max_line_gap = 20
+    line_image = np.copy(image) * 0
+
+    lines = cv2.HoughLinesP(edges, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
+
+    for line in lines:
+        for x1, y1, x2, y2 in line:
+            cv2.line(line_image, (x1, y1), (x2, y2), (255, 0, 0), 5)
+
+    cv2.imwrite("tests/output_images/columns.jpg", edges)
+
+    return edges
+
+
+def get_row_region(image):
+    """Given the image of the puzzle area, return number for rows"""
+    pass
 
 
 if __name__ == "__main__":
     image_path = input("Please enter path to image file: ")
     image = get_image(image_path)
     transformed_image = transform_image(image)
+    column_region = get_column_region(transformed_image)
