@@ -36,12 +36,6 @@ def transform_image(image):
     return image
 
 
-def get_puzzle_space(img):
-    """Given image, get puzzle area"""
-    transformed_image = transform_image(img)
-    return transformed_image
-
-
 if __name__ == "__main__":
     image_path = input("Please enter path to image file: ")
     image = get_image(image_path)

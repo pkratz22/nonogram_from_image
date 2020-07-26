@@ -11,12 +11,12 @@ class test_nonogram_from_image(unittest.TestCase):
         self.assertIsNotNone(nonogram_from_image.get_image(
             "tests/input_images/image2.jpg"))
 
-    def test_get_puzzle_space(self):
+    def test_transform_image(self):
         image = nonogram_from_image.get_image("tests/input_images/image1.jpg")
-        self.assertIsNotNone(nonogram_from_image.get_puzzle_space(image))
+        self.assertIsNotNone(nonogram_from_image.transform_image(image))
 
         image = nonogram_from_image.get_image("tests/input_images/image2.jpg")
-        self.assertIsNotNone(nonogram_from_image.get_puzzle_space(image))
+        self.assertIsNotNone(nonogram_from_image.transform_image(image))
 
 
 if __name__ == "__main__":
