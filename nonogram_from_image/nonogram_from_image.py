@@ -47,8 +47,8 @@ def get_column_region(image):
 
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
     dilation = cv2.dilate(thresh_img, kernel, iterations=1)
-    kernel1 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
-    erosion = cv2.erode(dilation, kernel1, iterations=1)
+    kernel1 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
+    erosion = cv2.erode(dilation, kernel1, iterations=2)
 
     low_threshold = 50
     high_threshold = 150
