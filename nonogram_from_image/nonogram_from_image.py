@@ -45,30 +45,14 @@ def get_column_region(image):
 
     _, thresh_img = cv2.threshold(image_blurred, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
-    dilation = cv2.dilate(thresh_img, kernel, iterations=1)
-    kernel1 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
-    erosion = cv2.erode(dilation, kernel1, iterations=2)
+    kernel_opening = np.ones((5, 5), np.uint8)
+    kernel_dilation = np.ones((5, 20), np.uint8)
+    opening = cv2.morphologyEx(thresh_img, cv2.MORPH_OPEN, kernel_opening)
+    dilate = cv2.morphologyEx(opening, cv2.MORPH_DILATE, kernel_dilation)
 
-    low_threshold = 50
-    high_threshold = 150
-    edges = cv2.Canny(erosion, low_threshold, high_threshold, apertureSize=3)
+    cv2.imwrite("tests/output_images/columns.jpg", dilate)
 
-    rho = 1
-    theta = np.pi / 180
-    threshold = 15
-    min_line_length = 50
-    max_line_gap = 20
-
-    lines = cv2.HoughLinesP(edges, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
-
-    for line in lines:
-        for x1, y1, x2, y2 in line:
-            cv2.line(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
-
-    cv2.imwrite("tests/output_images/columns.jpg", image)
-
-    return edges
+    return opening
 
 
 def get_row_region(image):
