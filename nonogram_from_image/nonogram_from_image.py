@@ -46,13 +46,13 @@ def get_column_region(image):
     _, thresh_img = cv2.threshold(image_blurred, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
 
     kernel_opening = np.ones((5, 5), np.uint8)
-    kernel_dilation = np.ones((5, 20), np.uint8)
+    kernel_closing = np.ones((5, 20), np.uint8)
     opening = cv2.morphologyEx(thresh_img, cv2.MORPH_OPEN, kernel_opening)
-    dilate = cv2.morphologyEx(opening, cv2.MORPH_DILATE, kernel_dilation)
+    closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel_closing)
 
-    cv2.imwrite("tests/output_images/columns.jpg", dilate)
+    cv2.imwrite("tests/output_images/columns.jpg", closing)
 
-    return opening
+    return closing
 
 
 def get_row_region(image):
