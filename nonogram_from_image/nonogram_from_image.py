@@ -45,9 +45,14 @@ def get_column_region(image):
 
     _, thresh_img = cv2.threshold(image_blurred, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
 
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
+    dilation = cv2.dilate(thresh_img, kernel, iterations=1)
+    kernel1 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+    erosion = cv2.erode(dilation, kernel1, iterations=1)
+
     low_threshold = 50
     high_threshold = 150
-    edges = cv2.Canny(thresh_img, low_threshold, high_threshold)
+    edges = cv2.Canny(erosion, low_threshold, high_threshold, apertureSize=3)
 
     rho = 1
     theta = np.pi / 180
