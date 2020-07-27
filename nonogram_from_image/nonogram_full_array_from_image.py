@@ -47,30 +47,13 @@ def get_top_left_rectange(image, image_name):
 
     # base transformations
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    image_blurred = cv2.GaussianBlur(gray, (17, 7), 0)
+    image_blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 
     _, thresh_img = cv2.threshold(image_blurred, 0, 255, cv2.THRESH_BINARY_INV|cv2.THRESH_OTSU)
 
-    kernel_opening = np.ones((5, 5), np.uint8)
-    kernel_closing = np.ones((10, 15), np.uint8)
-    opening = cv2.morphologyEx(thresh_img, cv2.MORPH_OPEN, kernel_opening)
-    closing = cv2.morphologyEx(opening, cv2.MORPH_CLOSE, kernel_closing)
+    cv2.imwrite("tests/output_images/further_edits/{name}".format(name=image_name), thresh_img)
 
-    rho = 1
-    theta = np.pi / 180
-    threshold = 15
-    min_line_length = 50
-    max_line_gap = 20
-
-    lines = cv2.HoughLinesP(closing, rho, theta, threshold, np.array([]), min_line_length, max_line_gap)
-
-    for line in lines:
-        for x1, y1, x2, y2 in line:
-            cv2.line(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
-
-    cv2.imwrite("tests/output_images/further_edits/{name}".format(name=image_name), image)
-
-    return image
+    return thresh_img
 
 
 if __name__ == "__main__":
