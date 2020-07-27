@@ -1,5 +1,5 @@
 import unittest
-from .context import nonogram_from_image
+from .context import nonogram_full_array_from_image
 
 
 class test_nonogram_full_array_from_image(unittest.TestCase):
