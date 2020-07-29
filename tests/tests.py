@@ -1,7 +1,7 @@
-"""Create portable serialized representations of Python objects.
+"""Test functions from source code files.
 
-See module copyreg for a mechanism for registering custom picklers.
-See module pickletools source for extensive comments.
+Test functions from nonogram_full_array_from_image.
+Test functions from formatted_array_from_full_array.
 
 Classes:
 
