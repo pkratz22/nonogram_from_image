@@ -141,7 +141,8 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
         self.assertEqual(
             formatted_array_from_full_array.get_teal_string(
                 ver_array, hor_array),
-            '{"ver":[[4],[1,2,1],[6],[1,2,1],[2,2],[4]],"hor":[[4],[1,1,2],[4,1],[4,1],[1,1,2],[4]]}'
+            ('{"ver":[[4],[1,2,1],[6],[1,2,1],[2,2],[4]]'
+             '"hor":[[4],[1,1,2],[4,1],[4,1],[1,1,2],[4]]}')
         )
 
 
