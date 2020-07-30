@@ -13,14 +13,21 @@ Functions:
     test_transform_image(self)
     test_get_top_left_rectange(self)
     test_get_num_rows(self)
-    test_get_num_cols(self)
+    test_get_teal_string(self)
 
 Misc variables:
 
     image
     image_name
     transformed_image
-    column_area"""
+    column_area
+    grid_array
+    transposed_array
+    num_rows
+    num_cols
+    ver_array
+    hor_array
+    """
 
 import unittest
 from .context import nonogram_full_array_from_image
@@ -100,7 +107,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
     def test_get_num_rows(self):
         """Testing get_num_rows function"""
         self.assertEqual(
-            formatted_array_from_full_array.get_num_rows(
+            formatted_array_from_full_array.get_num_rows_cols(
                 [["", "", "", "", 1, "", "", 1, ""],
                  ["", "", "", "", 1, 4, 4, 1, ""],
                  ["", "", "", 4, 2, 1, 1, 2, 4],
@@ -109,36 +116,33 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
                  ["", "", 6, "", "", "", "", "", ""],
                  [1, 2, 1, "", "", "", "", "", ""],
                  ["", 2, 2, "", "", "", "", "", ""],
-                 ["", "", 4, "", "", "", "", "", ""]]), 2)
+                 ["", "", 4, "", "", "", "", "", ""]]), 3)
 
-    def test_get_num_cols(self):
-        """Testing get_num_cols function"""
+    def test_get_teal_string(self):
+        """Test get_teal_string function"""
+        grid_array = [["", "", "", "", 1, "", "", 1, ""],
+                      ["", "", "", "", 1, 4, 4, 1, ""],
+                      ["", "", "", 4, 2, 1, 1, 2, 4],
+                      ["", "", 4, "", "", "", "", "", ""],
+                      [1, 2, 1, "", "", "", "", "", ""],
+                      ["", "", 6, "", "", "", "", "", ""],
+                      [1, 2, 1, "", "", "", "", "", ""],
+                      ["", 2, 2, "", "", "", "", "", ""],
+                      ["", "", 4, "", "", "", "", "", ""]]
+        transposed_array = list(map(list, zip(*grid_array)))
+        num_rows = formatted_array_from_full_array.get_num_rows_cols(
+            grid_array)
+        num_cols = formatted_array_from_full_array.get_num_rows_cols(
+            transposed_array)
+        ver_array = formatted_array_from_full_array.get_row_col_array(
+            grid_array, num_cols)
+        hor_array = formatted_array_from_full_array.get_row_col_array(
+            transposed_array, num_rows)
         self.assertEqual(
-            formatted_array_from_full_array.get_num_cols(
-                [["", "", "", "", 1, "", "", 1, ""],
-                 ["", "", "", "", 1, 4, 4, 1, ""],
-                 ["", "", "", 4, 2, 1, 1, 2, 4],
-                 ["", "", 4, "", "", "", "", "", ""],
-                 [1, 2, 1, "", "", "", "", "", ""],
-                 ["", "", 6, "", "", "", "", "", ""],
-                 [1, 2, 1, "", "", "", "", "", ""],
-                 ["", 2, 2, "", "", "", "", "", ""],
-                 ["", "", 4, "", "", "", "", "", ""]]), 2)
-
-    def test_get_col_array(self):
-        """Testing get_col_array function"""
-        self.assertEqual(
-            formatted_array_from_full_array.get_col_array(
-                [["", "", "", "", 1, "", "", 1, ""],
-                 ["", "", "", "", 1, 4, 4, 1, ""],
-                 ["", "", "", 4, 2, 1, 1, 2, 4],
-                 ["", "", 4, "", "", "", "", "", ""],
-                 [1, 2, 1, "", "", "", "", "", ""],
-                 ["", "", 6, "", "", "", "", "", ""],
-                 [1, 2, 1, "", "", "", "", "", ""],
-                 ["", 2, 2, "", "", "", "", "", ""],
-                 ["", "", 4, "", "", "", "", "", ""]], 2),
-            [[4], [1, 1, 2], [4, 1], [4, 1], [1, 1, 2], [4]])
+            formatted_array_from_full_array.get_teal_string(
+                ver_array, hor_array),
+            '{"ver":[[4],[1,2,1],[6],[1,2,1],[2,2],[4]],"hor":[[4],[1,1,2],[4,1],[4,1],[1,1,2],[4]]}'
+        )
 
 
 if __name__ == "__main__":
