@@ -1,6 +1,14 @@
-import cv2
-import numpy as np
+"""Get grid array from nonogram image
+
+Functions:
+    get_image(path)
+    get_image_name(path)
+    transform_image(image, image_name)
+    get_top_left_rectange(image, image_name)
+"""
+# imports
 import os
+import cv2
 
 
 def get_image(path):
@@ -30,11 +38,11 @@ def transform_image(image, image_name):
         edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     # finds largest contour
-    c = max(contours, key=cv2.contourArea)
-    x, y, w, h = cv2.boundingRect(c)
+    max_contour = max(contours, key=cv2.contourArea)
+    x_coord, y_coord, width, height = cv2.boundingRect(max_contour)
 
     # creates image with contour
-    cropped_image = image[y:y + h, x:x + w]
+    cropped_image = image[y_coord:y_coord + height, x_coord:x_coord + width]
 
     # write image
     cv2.imwrite("tests/output_images/cropped/{name}".format(name=image_name), cropped_image)
@@ -57,8 +65,8 @@ def get_top_left_rectange(image, image_name):
 
 
 if __name__ == "__main__":
-    image_path = input("Please enter path to image file: ")
-    image = get_image(image_path)
-    image_name = get_image_name(image_path)
-    transformed_image = transform_image(image, image_name)
-    top_left_rectangle = get_top_left_rectange(transformed_image, image_name)
+    nonogram_image_path = input("Please enter path to image file: ")
+    nonogram_image = get_image(nonogram_image_path)
+    nonogram_image_name = get_image_name(nonogram_image_path)
+    transformed_image = transform_image(nonogram_image, nonogram_image_name)
+    top_left_rectangle = get_top_left_rectange(transformed_image, nonogram_image_name)

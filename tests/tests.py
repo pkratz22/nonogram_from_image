@@ -32,6 +32,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
 
     Testing formatted_array_from_full_array and
     testing nonogram_full_array_from_image"""
+
     def test_get_image(self):
         """Testing get_image function"""
         self.assertIsNotNone(
@@ -108,7 +109,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
                  ["", "", 6, "", "", "", "", "", ""],
                  [1, 2, 1, "", "", "", "", "", ""],
                  ["", 2, 2, "", "", "", "", "", ""],
-                 ["", "", 4, "", "", "", "", "", ""]]), 3)
+                 ["", "", 4, "", "", "", "", "", ""]]), 2)
 
     def test_get_num_cols(self):
         """Testing get_num_cols function"""
@@ -122,7 +123,22 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
                  ["", "", 6, "", "", "", "", "", ""],
                  [1, 2, 1, "", "", "", "", "", ""],
                  ["", 2, 2, "", "", "", "", "", ""],
-                 ["", "", 4, "", "", "", "", "", ""]]), 3)
+                 ["", "", 4, "", "", "", "", "", ""]]), 2)
+
+    def test_get_col_array(self):
+        """Testing get_col_array function"""
+        self.assertEqual(
+            formatted_array_from_full_array.get_col_array(
+                [["", "", "", "", 1, "", "", 1, ""],
+                 ["", "", "", "", 1, 4, 4, 1, ""],
+                 ["", "", "", 4, 2, 1, 1, 2, 4],
+                 ["", "", 4, "", "", "", "", "", ""],
+                 [1, 2, 1, "", "", "", "", "", ""],
+                 ["", "", 6, "", "", "", "", "", ""],
+                 [1, 2, 1, "", "", "", "", "", ""],
+                 ["", 2, 2, "", "", "", "", "", ""],
+                 ["", "", 4, "", "", "", "", "", ""]], 2),
+            [[4], [1, 1, 2], [4, 1], [4, 1], [1, 1, 2], [4]])
 
 
 if __name__ == "__main__":
