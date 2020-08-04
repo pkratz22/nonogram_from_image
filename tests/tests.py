@@ -2,31 +2,6 @@
 
 Test functions from nonogram_full_array_from_image.
 Test functions from formatted_array_from_full_array.
-
-Classes:
-
-    TestNonogramFullArrayFromImage
-
-Functions:
-
-    test_get_image(self)
-    test_transform_image(self)
-    test_get_top_left_rectange(self)
-    test_get_num_rows(self)
-    test_get_teal_string(self)
-
-Misc variables:
-
-    image
-    image_name
-    transformed_image
-    column_area
-    grid_array
-    transposed_array
-    num_rows
-    num_cols
-    ver_array
-    hor_array
     """
 
 import unittest
@@ -73,7 +48,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
             nonogram_full_array_from_image.transform_image(image, image_name))
 
     def test_get_top_left_rectange(self):
-        """Testing get_top_left_rectangle function"""
+        """Testing get_top_left_rectange function"""
         image = nonogram_full_array_from_image.get_image(
             "tests/input_images/image1.jpg")
         image_name = nonogram_full_array_from_image.get_image_name(
@@ -141,7 +116,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
         self.assertEqual(
             formatted_array_from_full_array.get_teal_string(
                 ver_array, hor_array),
-            ('{"ver":[[4],[1,2,1],[6],[1,2,1],[2,2],[4]]'
+            ('{"ver":[[4],[1,2,1],[6],[1,2,1],[2,2],[4]],'
              '"hor":[[4],[1,1,2],[4,1],[4,1],[1,1,2],[4]]}')
         )
 

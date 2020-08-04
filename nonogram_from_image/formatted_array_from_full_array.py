@@ -1,9 +1,4 @@
-"""Convert array of entire grid to row/col arrays
-
-Functions:
-    get_num_rows(array)
-    get_num_cols(array)
-"""
+"""Convert array of entire grid to row/col arrays"""
 
 
 def get_num_rows_cols(grid_array):
@@ -71,5 +66,14 @@ def main(grid_array):
 
 
 if __name__ == "__main__":
-    array = input("Please enter array: ")
+    # array = input("Please enter array: ")
+    array = [["", "", "", "", 1, "", "", 1, ""],
+                      ["", "", "", "", 1, 4, 4, 1, ""],
+                      ["", "", "", 4, 2, 1, 1, 2, 4],
+                      ["", "", 4, "", "", "", "", "", ""],
+                      [1, 2, 1, "", "", "", "", "", ""],
+                      ["", "", 6, "", "", "", "", "", ""],
+                      [1, 2, 1, "", "", "", "", "", ""],
+                      ["", 2, 2, "", "", "", "", "", ""],
+                      ["", "", 4, "", "", "", "", "", ""]]
     print(main(array))

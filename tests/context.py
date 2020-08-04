@@ -1,3 +1,4 @@
+"""Imports for tests"""
 import sys
 sys.path.append('../')
 
