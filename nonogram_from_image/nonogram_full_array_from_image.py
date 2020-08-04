@@ -15,33 +15,36 @@ def get_image_name(path):
     return os.path.basename(path)
 
 
-def get_grid_size(image, image_name):
-    """Get grid dimensions"""
-    # get pytesseract
-    pytesseract.pytesseract.tesseract_cmd = "Tesseract-OCR/tesseract"
-
+def base_transformation(image):
+    """Complete base transformations"""
     # make image gray
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # apply Gaussian Blur to reduce noise
     image_blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 
-    # get edges using Canny method
-    edges = cv2.Canny(image_blurred, 100, 300, apertureSize=3)
+    return image_blurred
 
+
+def get_largest_contour_bounding_box(edges):
+    """Get largest contour"""
     # find contours
     contours, _ = cv2.findContours(
         edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     # finds largest contour
     max_contour = max(contours, key=cv2.contourArea)
+
     x_coord, y_coord, width, height = cv2.boundingRect(max_contour)
+    return (x_coord, y_coord, width, height)
 
-    # creates image with contour
-    cropped_image = image[y_coord - 40:y_coord,
-                          (x_coord + width) // 2:x_coord + width]
 
-    text = pytesseract.image_to_string(cropped_image)
+def get_grid_fillable_area(image):
+    """Get dimensions of fillable area"""
+    # get pytesseract
+    pytesseract.pytesseract.tesseract_cmd = "Tesseract-OCR/tesseract"
+
+    text = pytesseract.image_to_string(image)
 
     text = text.replace("l", "1")
 
@@ -50,63 +53,61 @@ def get_grid_size(image, image_name):
 
     grid_width, grid_height = grid_size.split('x')
 
-    cropped_image = image[y_coord:y_coord + height,
-                          x_coord:x_coord + width]
+    return (grid_width, grid_height)
+
+
+def get_fillable_area_dimensions(image):
+    """Get grid dimensions"""
+    # apply base transformations
+    image_blurred = base_transformation(image)
+
+    # get edges using Canny method
+    edges = cv2.Canny(image_blurred, 100, 300, apertureSize=3)
+
+    # get largest contour
+    x_coord, y_coord, width, _ = get_largest_contour_bounding_box(edges)
+
+    # creates image with contour
+    cropped_image = image[y_coord - 40:y_coord,
+                          (x_coord + width) // 2:x_coord + width]
+
+    # get fillable area width and height in number of cells
+    grid_width, grid_height = get_grid_fillable_area(cropped_image)
+
+    return (grid_width, grid_height)
+
+
+def transform_image(image):
+    """Transform image to detect edges"""
+    # apply base transformations
+    image_blurred = base_transformation(image)
+
+    # get edges using Canny method
+    edges = cv2.Canny(image_blurred, 100, 300, apertureSize=3)
+
+    # finds largest contour
+    x_coord, y_coord, width, height = get_largest_contour_bounding_box(edges)
+
+    # creates image with contour
+    cropped_image = image[y_coord:y_coord + height, x_coord:x_coord + width]
+
+    return cropped_image
+
+
+def get_individual_cell_dimensions(image):
+    """Get cell dimensions"""
+    # crop image to grid
+    cropped_image = transform_image(image)
+
+    # get grid width and height in number of cells
+    grid_width, grid_height = get_fillable_area_dimensions(image)
 
     cell_width_restriction = cropped_image.shape[1] / int(grid_width)
     cell_height_restriction = cropped_image.shape[0] / int(grid_height)
 
     cell_size_restriction = cell_width_restriction * cell_height_restriction
 
-    cropped_gray = cv2.cvtColor(cropped_image, cv2.COLOR_BGR2GRAY)
-    cropped_blurred = cv2.GaussianBlur(cropped_gray, (3, 3), 0)
-    cropped_edges = cv2.Canny(cropped_blurred, 100, 300, apertureSize=3)
-
-    contours, _ = cv2.findContours(
-        cropped_edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-
-    for contour in contours:
-        x_coord, y_coord, width, height = cv2.boundingRect(contour)
-        if (abs(cropped_image.shape[0] - y_coord) <
-                cell_height_restriction) and (x_coord < cell_width_restriction):
-            area = cv2.contourArea(contour)
-            if area * 1.1 < cell_size_restriction:
-                cv2.drawContours(cropped_image, contour, 0, (255, 255, 0), 3)
-
-    cv2.imwrite(
-        "tests/output_images/further_edits/{name}".format(name=image_name), cropped_image)
-
-    return cropped_image
-
-
-def transform_image(image, image_name):
-    """Transform image to detect edges"""
-
-    # make image gray
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # apply Gaussian Blur to reduce noise
-    image_blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-
-    # get edges using Canny method
-    edges = cv2.Canny(image_blurred, 100, 300, apertureSize=3)
-
-    # find contours
-    contours, _ = cv2.findContours(
-        edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-
-    # finds largest contour
-    max_contour = max(contours, key=cv2.contourArea)
-    x_coord, y_coord, width, height = cv2.boundingRect(max_contour)
-
-    # creates image with contour
-    cropped_image = image[y_coord:y_coord + height, x_coord:x_coord + width]
-
-    # write image
-    cv2.imwrite(
-        "tests/output_images/cropped/{name}".format(name=image_name), cropped_image)
-
-    return cropped_image
+    return (cell_width_restriction, cell_height_restriction, cell_size_restriction)
 
 
 def get_top_left_rectange(image, image_name):
@@ -138,8 +139,8 @@ def get_top_left_rectange(image, image_name):
 
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
-    NONOGRAM_IMAGE_PATH = "C:/Users/pkrat/Documents/GitHub/nonogram_from_image/tests/input_images/image1.jpg"
+    NONOGRAM_IMAGE_PATH = "tests/input_images/image1.jpg"
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
-    get_grid_size(nonogram_image, nonogram_image_name)
+    get_individual_cell_dimensions(nonogram_image)
     

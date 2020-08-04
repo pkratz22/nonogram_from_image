@@ -28,24 +28,18 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
         """Testing transform_image function"""
         image = nonogram_full_array_from_image.get_image(
             "tests/input_images/image1.jpg")
-        image_name = nonogram_full_array_from_image.get_image_name(
-            "tests/input_images/image1.jpg")
         self.assertIsNotNone(
-            nonogram_full_array_from_image.transform_image(image, image_name))
+            nonogram_full_array_from_image.transform_image(image))
 
         image = nonogram_full_array_from_image.get_image(
             "tests/input_images/image2.jpg")
-        image_name = nonogram_full_array_from_image.get_image_name(
-            "tests/input_images/image2.jpg")
         self.assertIsNotNone(
-            nonogram_full_array_from_image.transform_image(image, image_name))
+            nonogram_full_array_from_image.transform_image(image))
 
         image = nonogram_full_array_from_image.get_image(
             "tests/input_images/image3.jpg")
-        image_name = nonogram_full_array_from_image.get_image_name(
-            "tests/input_images/image3.jpg")
         self.assertIsNotNone(
-            nonogram_full_array_from_image.transform_image(image, image_name))
+            nonogram_full_array_from_image.transform_image(image))
 
     def test_get_top_left_rectange(self):
         """Testing get_top_left_rectange function"""
@@ -54,7 +48,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
         image_name = nonogram_full_array_from_image.get_image_name(
             "tests/input_images/image1.jpg")
         transformed_image = nonogram_full_array_from_image.transform_image(
-            image, image_name)
+            image)
         column_area = nonogram_full_array_from_image.get_top_left_rectange(
             transformed_image, image_name)
         self.assertIsNotNone(column_area)
@@ -64,7 +58,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
         image_name = nonogram_full_array_from_image.get_image_name(
             "tests/input_images/image2.jpg")
         transformed_image = nonogram_full_array_from_image.transform_image(
-            image, image_name)
+            image)
         column_area = nonogram_full_array_from_image.get_top_left_rectange(
             transformed_image, image_name)
         self.assertIsNotNone(column_area)
@@ -74,7 +68,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
         image_name = nonogram_full_array_from_image.get_image_name(
             "tests/input_images/image3.jpg")
         transformed_image = nonogram_full_array_from_image.transform_image(
-            image, image_name)
+            image)
         column_area = nonogram_full_array_from_image.get_top_left_rectange(
             transformed_image, image_name)
         self.assertIsNotNone(column_area)
