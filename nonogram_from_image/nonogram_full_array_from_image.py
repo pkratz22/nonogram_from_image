@@ -72,8 +72,7 @@ def get_grid_size(image, image_name):
             area = cv2.contourArea(contour)
             if area * 1.1 < cell_size_restriction:
                 cv2.drawContours(cropped_image, contour, 0, (255, 255, 0), 3)
-                break
-            
+
     cv2.imwrite(
         "tests/output_images/further_edits/{name}".format(name=image_name), cropped_image)
 
@@ -139,7 +138,8 @@ def get_top_left_rectange(image, image_name):
 
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
-    nonogram_image_path = "C:/Users/Peter/Documents/GitHub/nonogram_from_image/tests/input_images/image1.jpg"
-    nonogram_image = get_image(nonogram_image_path)
-    nonogram_image_name = get_image_name(nonogram_image_path)
+    NONOGRAM_IMAGE_PATH = "C:/Users/pkrat/Documents/GitHub/nonogram_from_image/tests/input_images/image1.jpg"
+    nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
+    nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
     get_grid_size(nonogram_image, nonogram_image_name)
+    
