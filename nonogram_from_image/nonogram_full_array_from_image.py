@@ -110,31 +110,21 @@ def get_individual_cell_dimensions(image):
     return (cell_width_restriction, cell_height_restriction, cell_size_restriction)
 
 
-def get_top_left_rectange(image, image_name):
+def filter_numbers_from_transformed_grid(image):
     """Given the image of the puzzle area, return number for columns"""
-
-    # base transformations
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    image_blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-
-    _, thresh_img = cv2.threshold(
-        image_blurred, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
-
-    # filter out numbers
     contours = cv2.findContours(
-        thresh_img,
+        image,
         cv2.RETR_TREE,
         cv2.CHAIN_APPROX_SIMPLE)
+
     contours = contours[0] if len(contours) == 2 else contours[1]
+
     for contour in contours:
         area = cv2.contourArea(contour)
         if area < 1000:
-            cv2.drawContours(thresh_img, [contour], -1, (0, 0, 0), -1)
+            cv2.drawContours(image, [contour], -1, (0, 0, 0), -1)
 
-    cv2.imwrite(
-        "tests/output_images/further_edits/{name}".format(name=image_name), thresh_img)
-
-    return thresh_img
+    return image
 
 
 if __name__ == "__main__":
