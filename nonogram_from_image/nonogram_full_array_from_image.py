@@ -110,7 +110,7 @@ def get_individual_cell_dimensions(image):
     return (cell_width_restriction, cell_height_restriction, cell_size_restriction)
 
 
-def filter_numbers_from_transformed_grid(image):
+def filter_numbers_from_transformed_grid(image, cell_size_restriction):
     """Given the image of the puzzle area, return number for columns"""
     contours = cv2.findContours(
         image,
@@ -121,7 +121,7 @@ def filter_numbers_from_transformed_grid(image):
 
     for contour in contours:
         area = cv2.contourArea(contour)
-        if area < 1000:
+        if area < (cell_size_restriction / 2):
             cv2.drawContours(image, [contour], -1, (0, 0, 0), -1)
 
     return image
