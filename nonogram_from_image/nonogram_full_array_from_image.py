@@ -41,6 +41,9 @@ def get_largest_contour_bounding_box(edges):
 
 def get_grid_fillable_area(image):
     """Get dimensions of fillable area"""
+    # currently doesn't work on biggest grid
+    # first see if this section is necessary, then fix
+
     # get pytesseract
     pytesseract.pytesseract.tesseract_cmd = "Tesseract-OCR/tesseract"
 
@@ -70,6 +73,8 @@ def get_fillable_area_dimensions(image):
     # creates image with contour
     cropped_image = image[y_coord - 40:y_coord,
                           (x_coord + width) // 2:x_coord + width]
+
+    cv2.imwrite("tests/output_images/further_edits/{name}".format(name="dimension_crop.jpg"), cropped_image) # remove once works
 
     # get fillable area width and height in number of cells
     grid_width, grid_height = get_grid_fillable_area(cropped_image)
@@ -129,8 +134,9 @@ def filter_numbers_from_transformed_grid(image, cell_size_restriction):
 
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
-    NONOGRAM_IMAGE_PATH = "tests/input_images/image1.jpg"
+    NONOGRAM_IMAGE_PATH = "tests/input_images/image3.jpg"
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
-    get_individual_cell_dimensions(nonogram_image)
+    #get_individual_cell_dimensions(nonogram_image)
+    get_fillable_area_dimensions(nonogram_image)
     
