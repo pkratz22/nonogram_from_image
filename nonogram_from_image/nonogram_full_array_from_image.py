@@ -39,49 +39,6 @@ def get_largest_contour_bounding_box(edges):
     return (x_coord, y_coord, width, height)
 
 
-def get_grid_fillable_area(image):
-    """Get dimensions of fillable area"""
-    # currently doesn't work on biggest grid
-    # first see if this section is necessary, then fix
-
-    # get pytesseract
-    pytesseract.pytesseract.tesseract_cmd = "Tesseract-OCR/tesseract"
-
-    text = pytesseract.image_to_string(image)
-
-    text = text.replace("l", "1")
-
-    separator = "#"
-    grid_size = text.split(separator, 1)[0].strip()
-
-    grid_width, grid_height = grid_size.split('x')
-
-    return (grid_width, grid_height)
-
-
-def get_fillable_area_dimensions(image):
-    """Get grid dimensions"""
-    # apply base transformations
-    image_blurred = base_transformation(image)
-
-    # get edges using Canny method
-    edges = cv2.Canny(image_blurred, 100, 300, apertureSize=3)
-
-    # get largest contour
-    x_coord, y_coord, width, _ = get_largest_contour_bounding_box(edges)
-
-    # creates image with contour
-    cropped_image = image[y_coord - 40:y_coord,
-                          (x_coord + width) // 2:x_coord + width]
-
-    cv2.imwrite("tests/output_images/further_edits/{name}".format(name="dimension_crop.jpg"), cropped_image) # remove once works
-
-    # get fillable area width and height in number of cells
-    grid_width, grid_height = get_grid_fillable_area(cropped_image)
-
-    return (grid_width, grid_height)
-
-
 def transform_image(image):
     """Transform image to detect edges"""
     # apply base transformations
@@ -101,18 +58,28 @@ def transform_image(image):
 
 def get_individual_cell_dimensions(image):
     """Get cell dimensions"""
-    # crop image to grid
-    cropped_image = transform_image(image)
+    white = 255
+    black = 0
 
-    # get grid width and height in number of cells
-    grid_width, grid_height = get_fillable_area_dimensions(image)
+    temp_color = white
 
-    cell_width_restriction = cropped_image.shape[1] / int(grid_width)
-    cell_height_restriction = cropped_image.shape[0] / int(grid_height)
-
-    cell_size_restriction = cell_width_restriction * cell_height_restriction
-
-    return (cell_width_restriction, cell_height_restriction, cell_size_restriction)
+    rows = image.shape[0]
+    cols = image.shape[1]
+    
+    for row in range(rows):
+        count = 0
+        for col in range(cols):
+            if image[row][col].all() != temp_color:
+                if temp_color == white:
+                    temp_color = black
+                else:
+                    temp_color = white
+                count += 1
+        if count == 0:
+            row += 1
+        else:
+            break
+    return count
 
 
 def filter_numbers_from_transformed_grid(image, cell_size_restriction):
@@ -137,6 +104,6 @@ if __name__ == "__main__":
     NONOGRAM_IMAGE_PATH = "tests/input_images/image3.jpg"
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
-    #get_individual_cell_dimensions(nonogram_image)
-    get_fillable_area_dimensions(nonogram_image)
-    
+    transformed_image = transform_image(nonogram_image)
+    COUNTER = get_individual_cell_dimensions(transformed_image)
+    print(COUNTER)
