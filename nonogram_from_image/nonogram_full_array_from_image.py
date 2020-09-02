@@ -58,12 +58,13 @@ def transform_image(image):
 def get_individual_cell_dimensions(image):
     """Get cell dimensions"""
 
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    (_, black_white_image) = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
+    cv2.imwrite('tests/output_images/image.jpg', image)
 
-    cv2.imshow('image', black_white_image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite('tests/output_images/gimage.jpg', gray_image)
+
+    (_, black_white_image) = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY)
+    cv2.imwrite('tests/output_images/bwimage.jpg', black_white_image)
 
     white = 255
     black = 0
@@ -71,8 +72,8 @@ def get_individual_cell_dimensions(image):
     rows = black_white_image.shape[0]
     cols = black_white_image.shape[1]
 
-    count = 0
     for row in range(rows):
+        count = 0
         for col in range(cols):
             current_color = black_white_image[row][col]
             if temp_color != current_color:
@@ -81,14 +82,14 @@ def get_individual_cell_dimensions(image):
                 else:
                     temp_color = white
                 count += 1
-        if count > 0:
+        if count > 2:
             break
     return count
 
 
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
-    NONOGRAM_IMAGE_PATH = "tests/input_images/image3.jpg"
+    NONOGRAM_IMAGE_PATH = "tests/input_images/image1.jpg"
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
     transformed_image = transform_image(nonogram_image)
