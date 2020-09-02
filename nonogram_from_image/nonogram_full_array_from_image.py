@@ -61,6 +61,10 @@ def get_individual_cell_dimensions(image):
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     (_, black_white_image) = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
 
+    cv2.imshow('image', black_white_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
     white = 255
     black = 0
     temp_color = white
@@ -80,23 +84,6 @@ def get_individual_cell_dimensions(image):
         if count > 0:
             break
     return count
-
-
-def filter_numbers_from_transformed_grid(image, cell_size_restriction):
-    """Given the image of the puzzle area, return number for columns"""
-    contours = cv2.findContours(
-        image,
-        cv2.RETR_TREE,
-        cv2.CHAIN_APPROX_SIMPLE)
-
-    contours = contours[0] if len(contours) == 2 else contours[1]
-
-    for contour in contours:
-        area = cv2.contourArea(contour)
-        if area < (cell_size_restriction / 2):
-            cv2.drawContours(image, [contour], -1, (0, 0, 0), -1)
-
-    return image
 
 
 if __name__ == "__main__":
