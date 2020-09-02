@@ -57,26 +57,27 @@ def transform_image(image):
 
 def get_individual_cell_dimensions(image):
     """Get cell dimensions"""
+
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    (_, black_white_image) = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
+
     white = 255
     black = 0
-
     temp_color = white
+    rows = black_white_image.shape[0]
+    cols = black_white_image.shape[1]
 
-    rows = image.shape[0]
-    cols = image.shape[1]
-
+    count = 0
     for row in range(rows):
-        count = 0
         for col in range(cols):
-            if image[row][col].all() != temp_color:
+            current_color = black_white_image[row][col]
+            if temp_color != current_color:
                 if temp_color == white:
                     temp_color = black
                 else:
                     temp_color = white
                 count += 1
-        if count == 0:
-            row += 1
-        else:
+        if count > 0:
             break
     return count
 
