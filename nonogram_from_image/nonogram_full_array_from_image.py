@@ -2,7 +2,6 @@
 # imports
 import os
 import cv2
-import pytesseract
 
 
 def get_image(path):
@@ -65,7 +64,7 @@ def get_individual_cell_dimensions(image):
 
     rows = image.shape[0]
     cols = image.shape[1]
-    
+
     for row in range(rows):
         count = 0
         for col in range(cols):
