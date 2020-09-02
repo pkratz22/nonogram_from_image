@@ -58,18 +58,11 @@ def transform_image(image):
 
 def get_individual_cell_dimensions(image):
     """Get cell dimensions"""
-
-    cv2.imwrite('tests/output_images/image.jpg', image)
-
+    # transform image
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite('tests/output_images/gimage.jpg', gray_image)
-
     (_, black_white_image) = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY)
-    cv2.imwrite('tests/output_images/bwimage.jpg', black_white_image)
-
     kernel = np.ones((1, 5), np.uint8)
     erosion = cv2.erode(black_white_image, kernel, iterations=1)
-    cv2.imwrite('tests/output_images/eimage.jpg', erosion)
 
     white = 255
     black = 0
@@ -101,7 +94,11 @@ def get_individual_cell_dimensions(image):
             else:
                 temp_color = white
             count += 1
-    return count
+
+    num_cols = int(round(count / 2))
+    approximate_col_side_length = erosion.shape[1] / num_cols
+    num_rows = int(round(erosion.shape[0] / approximate_col_side_length))
+    return num_rows, num_cols
 
 
 if __name__ == "__main__":
