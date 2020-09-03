@@ -47,21 +47,21 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
         nonogram_image = nonogram_full_array_from_image.get_image(image)
         transformed_image = nonogram_full_array_from_image.transform_image(
             nonogram_image)
-        self.assertEqual(nonogram_full_array_from_image.test_get_num_rows_cols_from_image(
+        self.assertEqual(nonogram_full_array_from_image.get_num_rows_cols_from_image(
             transformed_image), (20, 38))
 
         image = "tests/input_images/image2.jpg"
         nonogram_image = nonogram_full_array_from_image.get_image(image)
         transformed_image = nonogram_full_array_from_image.transform_image(
             nonogram_image)
-        self.assertEqual(nonogram_full_array_from_image.test_get_num_rows_cols_from_image(
+        self.assertEqual(nonogram_full_array_from_image.get_num_rows_cols_from_image(
             transformed_image), (26, 26))
 
         image = "tests/input_images/image3.jpg"
         nonogram_image = nonogram_full_array_from_image.get_image(image)
         transformed_image = nonogram_full_array_from_image.transform_image(
             nonogram_image)
-        self.assertEqual(nonogram_full_array_from_image.test_get_num_rows_cols_from_image(
+        self.assertEqual(nonogram_full_array_from_image.get_num_rows_cols_from_image(
             transformed_image), (61, 61))
 
     def test_get_num_rows_cols(self):

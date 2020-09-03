@@ -1,0 +1,4 @@
+1. Remove grid lines
+2. Draw in new grid lines based on number of rows and columns so there won't be noise
+3. Use new grid lines to find each cell (which will be contour)
+4. Cycle through each cell and search for numbers inside
