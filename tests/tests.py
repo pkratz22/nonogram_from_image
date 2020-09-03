@@ -42,7 +42,7 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
             nonogram_full_array_from_image.transform_image(image))
 
     def test_get_num_rows_cols_from_image(self):
-        """Test test_get_num_rows_cols_from_image"""
+        """Test get_num_rows_cols_from_image"""
         image = "tests/input_images/image1.jpg"
         nonogram_image = nonogram_full_array_from_image.get_image(image)
         transformed_image = nonogram_full_array_from_image.transform_image(
@@ -63,6 +63,44 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
             nonogram_image)
         self.assertEqual(nonogram_full_array_from_image.get_num_rows_cols_from_image(
             transformed_image), (61, 61))
+
+    def test_draw_improved_grid_lines(self):
+        """Test draw_improved_grid_lines"""
+        image = nonogram_full_array_from_image.get_image(
+            "tests/input_images/image1.jpg")
+        transformed_image = nonogram_full_array_from_image.transform_image(
+            image)
+        removed_grid_lines = nonogram_full_array_from_image.remove_grid_lines(
+            transformed_image)
+        number_of_rows = 20
+        number_of_cols = 38
+        self.assertIsNotNone(
+            nonogram_full_array_from_image.draw_improved_grid_lines(
+                removed_grid_lines, number_of_rows, number_of_cols))
+
+        image = nonogram_full_array_from_image.get_image(
+            "tests/input_images/image2.jpg")
+        transformed_image = nonogram_full_array_from_image.transform_image(
+            image)
+        removed_grid_lines = nonogram_full_array_from_image.remove_grid_lines(
+            transformed_image)
+        number_of_rows = 26
+        number_of_cols = 26
+        self.assertIsNotNone(
+            nonogram_full_array_from_image.draw_improved_grid_lines(
+                removed_grid_lines, number_of_rows, number_of_cols))
+
+        image = nonogram_full_array_from_image.get_image(
+            "tests/input_images/image3.jpg")
+        transformed_image = nonogram_full_array_from_image.transform_image(
+            image)
+        removed_grid_lines = nonogram_full_array_from_image.remove_grid_lines(
+            transformed_image)
+        number_of_rows = 61
+        number_of_cols = 61
+        self.assertIsNotNone(
+            nonogram_full_array_from_image.draw_improved_grid_lines(
+                removed_grid_lines, number_of_rows, number_of_cols))
 
     def test_get_num_rows_cols(self):
         """Testing get_num_rows function"""

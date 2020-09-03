@@ -1,4 +1,3 @@
-1. Draw in new grid lines based on number of rows and columns so there won't be noise
-2. Use new grid lines to find each cell (which will be contour) (get them by the coordinates of their corners)
-3. Using the coordinates, retrieve location for each cell in original image
-4. Cycle through each cell and search for numbers inside
+1. Use new grid lines to find each cell (which will be contour) (get them by the coordinates of their corners)
+2. Using the coordinates, retrieve location for each cell in original image
+3. Cycle through each cell and search for numbers inside

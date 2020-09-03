@@ -97,15 +97,25 @@ def remove_horizontal_grid_lines(image):
 
     # Remove horizontal
     horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 1))
-    detected_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, horizontal_kernel, iterations=2)
-    contours = cv2.findContours(detected_lines, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    detected_lines = cv2.morphologyEx(
+        thresh,
+        cv2.MORPH_OPEN,
+        horizontal_kernel,
+        iterations=2)
+    contours = cv2.findContours(
+        detected_lines,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[0] if len(contours) == 2 else contours[1]
     for contour in contours:
         cv2.drawContours(image, [contour], -1, (255, 255, 255), 2)
 
     # Repair image
     repair_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 6))
-    result = 255 - cv2.morphologyEx(255 - image, cv2.MORPH_CLOSE, repair_kernel, iterations=1)
+    result = 255 - cv2.morphologyEx(255 - image,
+                                    cv2.MORPH_CLOSE,
+                                    repair_kernel,
+                                    iterations=1)
 
     return result
 
@@ -116,15 +126,22 @@ def remove_vertical_grid_lines(image):
 
     # Remove vertical
     vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 25))
-    detected_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, vertical_kernel, iterations=2)
-    contours = cv2.findContours(detected_lines, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    detected_lines = cv2.morphologyEx(
+        thresh, cv2.MORPH_OPEN, vertical_kernel, iterations=2)
+    contours = cv2.findContours(
+        detected_lines,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[0] if len(contours) == 2 else contours[1]
     for contour in contours:
         cv2.drawContours(image, [contour], -1, (255, 255, 255), 2)
 
     # Repair image
     repair_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (6, 1))
-    result = 255 - cv2.morphologyEx(255 - image, cv2.MORPH_CLOSE, repair_kernel, iterations=1)
+    result = 255 - cv2.morphologyEx(255 - image,
+                                    cv2.MORPH_CLOSE,
+                                    repair_kernel,
+                                    iterations=1)
 
     return result
 
@@ -142,10 +159,12 @@ def draw_improved_grid_lines(image, num_rows, num_cols):
     col_width = image.shape[1] / num_cols
 
     for row in range(num_rows + 1):
-        cv2.line(image, (0, int(row * row_height)), (image.shape[1], int(row * row_height)), (255, 0, 0), 1, 1)
+        cv2.line(image, (0, int(row * row_height)),
+                 (image.shape[1], int(row * row_height)), (255, 0, 0), 1, 1)
 
     for col in range(num_cols + 1):
-        cv2.line(image, (int(col * col_width), 0), (int(col * col_width), image.shape[0]), (255, 0, 0), 1, 1)
+        cv2.line(image, (int(col * col_width), 0),
+                 (int(col * col_width), image.shape[0]), (255, 0, 0), 1, 1)
 
     return image
 
@@ -157,6 +176,8 @@ if __name__ == "__main__":
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
     transformed_image = transform_image(nonogram_image)
     removed_grid_lines = remove_grid_lines(transformed_image)
-    number_of_rows, number_of_cols = get_num_rows_cols_from_image(transformed_image)
-    new_image = draw_improved_grid_lines(removed_grid_lines, number_of_rows, number_of_cols)
+    number_of_rows, number_of_cols = get_num_rows_cols_from_image(
+        transformed_image)
+    new_image = draw_improved_grid_lines(
+        removed_grid_lines, number_of_rows, number_of_cols)
     cv2.imwrite('tests/output_images/image1.jpg', new_image)
