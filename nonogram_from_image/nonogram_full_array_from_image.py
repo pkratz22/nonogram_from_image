@@ -65,35 +65,30 @@ def test_get_num_rows_cols_from_image(image):
     kernel = np.ones((1, 5), np.uint8)
     erosion = cv2.erode(black_white_image, kernel, iterations=1)
 
-    white = 255
-    black = 0
-    rows = erosion.shape[0]
-    cols = erosion.shape[1]
-
-    for row in range(rows):
+    for row in range(erosion.shape[0]):
         count = 0
         temp_color = erosion[row][0]
-        for col in range(cols):
+        for col in range(erosion.shape[1]):
             current_color = erosion[row][col]
             if temp_color != current_color:
-                if temp_color == white:
-                    temp_color = black
+                if temp_color == 255:
+                    temp_color = 0
                 else:
-                    temp_color = white
+                    temp_color = 255
                 count += 1
         if count > 2:
             pixel_row_for_col_counting = row + 1
             break
 
-    temp_color = black
+    temp_color = 0
     count = 0
-    for col in range(cols):
+    for col in range(erosion.shape[1]):
         current_color = erosion[pixel_row_for_col_counting][col]
         if temp_color != current_color:
-            if temp_color == white:
-                temp_color = black
+            if temp_color == 255:
+                temp_color = 0
             else:
-                temp_color = white
+                temp_color = 255
             count += 1
 
     num_cols = int(round(count / 2))
