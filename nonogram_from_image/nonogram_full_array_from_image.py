@@ -56,11 +56,12 @@ def transform_image(image):
     return cropped_image
 
 
-def get_individual_cell_dimensions(image):
+def test_get_num_rows_cols_from_image(image):
     """Get cell dimensions"""
     # transform image
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    (_, black_white_image) = cv2.threshold(gray_image, 150, 255, cv2.THRESH_BINARY)
+    (_, black_white_image) = cv2.threshold(
+        gray_image, 150, 255, cv2.THRESH_BINARY)
     kernel = np.ones((1, 5), np.uint8)
     erosion = cv2.erode(black_white_image, kernel, iterations=1)
 
@@ -107,5 +108,5 @@ if __name__ == "__main__":
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
     transformed_image = transform_image(nonogram_image)
-    COUNTER = get_individual_cell_dimensions(transformed_image)
+    COUNTER = test_get_num_rows_cols_from_image(transformed_image)
     print(COUNTER)
