@@ -94,7 +94,7 @@ def get_num_rows_cols_from_image(image):
 def remove_horizontal_grid_lines(image):
     """Remove horizontal grid lines from image"""
     thresh = get_binary_image(image)[1]
-    
+
     # Remove horizontal
     horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 1))
     detected_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, horizontal_kernel, iterations=2)
