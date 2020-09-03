@@ -59,19 +59,17 @@ def transform_image(image):
 def get_binary_image(image):
     """Converts image to black and white"""
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    (_, black_white_image) = cv2.threshold(
+    (thresh, black_white_image) = cv2.threshold(
         gray_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-    return black_white_image
+    return thresh, black_white_image
 
 
 def get_num_rows_cols_from_image(image):
     """Get cell dimensions"""
     # transform image
-    black_white_image = get_binary_image(image)
+    black_white_image = get_binary_image(image)[1]
     kernel = np.ones((1, 5), np.uint8)
     dilation = cv2.dilate(black_white_image, kernel, iterations=1)
-
-    cv2.imwrite('tests/output_images/image1.jpg', dilation)
 
     for row in range(dilation.shape[0]):
         count = 0
@@ -93,10 +91,53 @@ def get_num_rows_cols_from_image(image):
     return num_rows, num_cols
 
 
+def remove_horizontal_grid_lines(image):
+    """Remove horizontal grid lines from image"""
+    thresh = get_binary_image(image)[1]
+    
+    # Remove horizontal
+    horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 1))
+    detected_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, horizontal_kernel, iterations=2)
+    contours = cv2.findContours(detected_lines, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours = contours[0] if len(contours) == 2 else contours[1]
+    for contour in contours:
+        cv2.drawContours(image, [contour], -1, (255, 255, 255), 2)
+
+    # Repair image
+    repair_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 6))
+    result = 255 - cv2.morphologyEx(255 - image, cv2.MORPH_CLOSE, repair_kernel, iterations=1)
+
+    cv2.imwrite('tests/output_images/image1.jpg', result)
+    return result
+
+
+def remove_vertical_grid_lines(image):
+    """Remove vertical grid lines from image"""
+    thresh = get_binary_image(image)[1]
+
+    # Remove vertical
+    vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 25))
+    detected_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, vertical_kernel, iterations=2)
+    contours = cv2.findContours(detected_lines, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours = contours[0] if len(contours) == 2 else contours[1]
+    for contour in contours:
+        cv2.drawContours(image, [contour], -1, (255, 255, 255), 2)
+
+    # Repair image
+    repair_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (6, 1))
+    result = 255 - cv2.morphologyEx(255 - image, cv2.MORPH_CLOSE, repair_kernel, iterations=1)
+
+    cv2.imwrite('tests/output_images/image1.jpg', result)
+
+    return result
+
+
 def remove_grid_lines(image):
-    """Remove grid lines from image"""
-    get_binary_image(image)
-    return
+    """Remove all grid lines"""
+    image_minus_horizontal = remove_horizontal_grid_lines(image)
+    image_minus_gridlines = remove_vertical_grid_lines(image_minus_horizontal)
+    return image_minus_gridlines
+
 
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
@@ -104,5 +145,6 @@ if __name__ == "__main__":
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
     transformed_image = transform_image(nonogram_image)
+    removed_grid_lines = remove_grid_lines(transformed_image)
     number_of_rows, number_of_cols = get_num_rows_cols_from_image(transformed_image)
     print(str(number_of_rows) + ", " + str(number_of_cols))
