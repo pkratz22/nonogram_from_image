@@ -107,7 +107,6 @@ def remove_horizontal_grid_lines(image):
     repair_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 6))
     result = 255 - cv2.morphologyEx(255 - image, cv2.MORPH_CLOSE, repair_kernel, iterations=1)
 
-    cv2.imwrite('tests/output_images/image1.jpg', result)
     return result
 
 
@@ -127,8 +126,6 @@ def remove_vertical_grid_lines(image):
     repair_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (6, 1))
     result = 255 - cv2.morphologyEx(255 - image, cv2.MORPH_CLOSE, repair_kernel, iterations=1)
 
-    cv2.imwrite('tests/output_images/image1.jpg', result)
-
     return result
 
 
@@ -139,6 +136,20 @@ def remove_grid_lines(image):
     return image_minus_gridlines
 
 
+def draw_improved_grid_lines(image, num_rows, num_cols):
+    """Draws single pixel grid lines with no noise to get contours from"""
+    row_height = image.shape[0] / num_rows
+    col_width = image.shape[1] / num_cols
+
+    for row in range(num_rows + 1):
+        cv2.line(image, (0, int(row * row_height)), (image.shape[1], int(row * row_height)), (255, 0, 0), 1, 1)
+
+    for col in range(num_cols + 1):
+        cv2.line(image, (int(col * col_width), 0), (int(col * col_width), image.shape[0]), (255, 0, 0), 1, 1)
+
+    return image
+
+
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
     NONOGRAM_IMAGE_PATH = "tests/input_images/image1.jpg"
@@ -147,4 +158,5 @@ if __name__ == "__main__":
     transformed_image = transform_image(nonogram_image)
     removed_grid_lines = remove_grid_lines(transformed_image)
     number_of_rows, number_of_cols = get_num_rows_cols_from_image(transformed_image)
-    print(str(number_of_rows) + ", " + str(number_of_cols))
+    new_image = draw_improved_grid_lines(removed_grid_lines, number_of_rows, number_of_cols)
+    cv2.imwrite('tests/output_images/image1.jpg', new_image)
