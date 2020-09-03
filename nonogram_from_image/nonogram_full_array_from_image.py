@@ -103,5 +103,5 @@ if __name__ == "__main__":
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
     transformed_image = transform_image(nonogram_image)
-    COUNTER = test_get_num_rows_cols_from_image(transformed_image)
-    print(COUNTER)
+    number_of_rows, number_of_cols = test_get_num_rows_cols_from_image(transformed_image)
+    print(number_of_rows + ", " + number_of_cols)
