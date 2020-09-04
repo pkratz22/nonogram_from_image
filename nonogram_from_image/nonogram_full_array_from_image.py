@@ -72,7 +72,6 @@ def get_num_rows_cols_from_image(image):
         gray_image, 150, 255, cv2.THRESH_BINARY)
     kernel = np.ones((1, 5), np.uint8)
     erosion = cv2.erode(black_white_image, kernel, iterations=1)
-    cv2.imwrite('tests/output_images/temp.jpg', erosion)
 
     for row in range(erosion.shape[0]):
         count = 0
