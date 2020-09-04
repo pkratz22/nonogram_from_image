@@ -204,13 +204,13 @@ def get_cell_from_grid(image, num_rows, num_cols):
     final_array = []
     for row in range(num_rows):
         for col in range(num_cols):
-            cell = image[row *
-                         row_height:min((row +
+            cell = image[int(row *
+                         row_height):int(min((row +
                                          1) *
-                                        row_height, image.shape[1]), col *
-                         col_width:min((col +
+                                        row_height, image.shape[1])), int(col *
+                         col_width):int(min((col +
                                         1) *
-                                       col_width, image.shape[0])]
+                                       col_width, image.shape[0]))]
             number = check_cell_for_number(cell)
             final_array.append(number)
     return final_array
