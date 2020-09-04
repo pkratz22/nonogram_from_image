@@ -197,7 +197,7 @@ def check_cell_for_number(cell):
     return number
 
 
-def get_cell_from_grid(image, num_rows, num_cols):
+def get_array_from_grid(image, num_rows, num_cols):
     """Gets cells from grid"""
     row_height = image.shape[0] / num_rows
     col_width = image.shape[1] / num_cols
@@ -218,12 +218,12 @@ def get_cell_from_grid(image, num_rows, num_cols):
 
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
-    NONOGRAM_IMAGE_PATH = "tests/input_images/image3.jpg"
+    NONOGRAM_IMAGE_PATH = "tests/input_images/image1.jpg"
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
     transformed_image = transform_image(nonogram_image)
     removed_grid_lines = remove_grid_lines(transformed_image)
     number_of_rows, number_of_cols = get_num_rows_cols_from_image(
         transformed_image)
-    finished_array = get_cell_from_grid(transformed_image, number_of_rows, number_of_cols)
+    finished_array = get_array_from_grid(transformed_image, number_of_rows, number_of_cols)
     print(finished_array)

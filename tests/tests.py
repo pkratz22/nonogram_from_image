@@ -102,6 +102,15 @@ class TestNonogramFullArrayFromImage(unittest.TestCase):
             nonogram_full_array_from_image.draw_improved_grid_lines(
                 removed_grid_lines, number_of_rows, number_of_cols))
 
+    def test_get_array_from_grid(self):
+        """Testing get_array_from_grid"""
+        nonogram_image_path = "tests/input_images/image1.jpg"
+        nonogram_image = nonogram_full_array_from_image.get_image(nonogram_image_path)
+        transformed_image = nonogram_full_array_from_image.transform_image(nonogram_image)
+        number_of_rows, number_of_cols = nonogram_full_array_from_image.get_num_rows_cols_from_image(
+            transformed_image)
+        finished_array = nonogram_full_array_from_image.get_array_from_grid(transformed_image, number_of_rows, number_of_cols)
+        self.assertIsEqual(finished_array, )
     def test_organize_array_by_rows(self):
         """Testing organize_array_by_rows"""
         number_of_cols = 9
