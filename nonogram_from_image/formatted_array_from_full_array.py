@@ -2,10 +2,10 @@
 
 def organize_array_by_rows(unformatted_array, num_cols):
     """Take unformatted array and make grid array"""
-    num_rows = len(unformatted_array) / num_cols
+    num_rows = int(len(unformatted_array) / num_cols)
     grid_array = []
     for row in range(num_rows):
-        grid_array.append(unformatted_array[row * num_cols:(row + 1) * num_cols - 1])
+        grid_array.append(unformatted_array[row * num_cols:(row + 1) * num_cols])
     return grid_array
 
 
@@ -76,7 +76,7 @@ def main(unformatted_array, num_cols):
 
 if __name__ == "__main__":
     # array = input("Please enter array: ")
-    number_of_cols = 9
+    NUMBER_OF_COLS = 9
     array = [
         "",
         "",
@@ -159,4 +159,4 @@ if __name__ == "__main__":
         "",
         "",
         ""]
-    print(main(array, number_of_cols))
+    print(main(array, NUMBER_OF_COLS))
