@@ -60,22 +60,25 @@ def get_binary_image(image):
     """Converts image to black and white"""
     gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     (thresh, black_white_image) = cv2.threshold(
-        gray_image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        gray_image, 150, 255, cv2.THRESH_BINARY_INV)
     return thresh, black_white_image
 
 
 def get_num_rows_cols_from_image(image):
     """Get cell dimensions"""
     # transform image
-    black_white_image = get_binary_image(image)[1]
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    (_, black_white_image) = cv2.threshold(
+        gray_image, 150, 255, cv2.THRESH_BINARY)
     kernel = np.ones((1, 5), np.uint8)
-    dilation = cv2.dilate(black_white_image, kernel, iterations=1)
+    erosion = cv2.erode(black_white_image, kernel, iterations=1)
+    cv2.imwrite('tests/output_images/temp.jpg', erosion)
 
-    for row in range(dilation.shape[0]):
+    for row in range(erosion.shape[0]):
         count = 0
-        temp_color = dilation[row][0]
-        for col in range(dilation.shape[1]):
-            current_color = dilation[row][col]
+        temp_color = erosion[row][0]
+        for col in range(erosion.shape[1]):
+            current_color = erosion[row][col]
             if temp_color != current_color:
                 if temp_color == 255:
                     temp_color = 0
@@ -83,11 +86,23 @@ def get_num_rows_cols_from_image(image):
                     temp_color = 255
                 count += 1
         if count > 2:
+            pixel_row_for_col_counting = row + 1
             break
 
+    temp_color = 0
+    count = 0
+    for col in range(erosion.shape[1]):
+        current_color = erosion[pixel_row_for_col_counting][col]
+        if temp_color != current_color:
+            if temp_color == 255:
+                temp_color = 0
+            else:
+                temp_color = 255
+            count += 1
+
     num_cols = int(round(count / 2))
-    approximate_col_side_length = dilation.shape[1] / num_cols
-    num_rows = int(round(dilation.shape[0] / approximate_col_side_length))
+    approximate_col_side_length = erosion.shape[1] / num_cols
+    num_rows = int(round(erosion.shape[0] / approximate_col_side_length))
     return num_rows, num_cols
 
 
@@ -142,7 +157,6 @@ def remove_vertical_grid_lines(image):
                                     cv2.MORPH_CLOSE,
                                     repair_kernel,
                                     iterations=1)
-
     return result
 
 
@@ -166,12 +180,19 @@ def draw_improved_grid_lines(image, num_rows, num_cols):
         cv2.line(image, (int(col * col_width), 0),
                  (int(col * col_width), image.shape[0]), (255, 0, 0), 1, 1)
 
+    cv2.line(image, (0, image.shape[0] -
+                     1), (image.shape[1], image.shape[0] -
+                          1), (255, 0, 0), 1, 1)
+    cv2.line(image, (image.shape[1] -
+                     1, 0), (image.shape[1] -
+                             1, image.shape[0]), (255, 0, 0), 1, 1)
+
     return image
 
 
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
-    NONOGRAM_IMAGE_PATH = "tests/input_images/image1.jpg"
+    NONOGRAM_IMAGE_PATH = "tests/input_images/image3.jpg"
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
     transformed_image = transform_image(nonogram_image)
@@ -180,4 +201,4 @@ if __name__ == "__main__":
         transformed_image)
     new_image = draw_improved_grid_lines(
         removed_grid_lines, number_of_rows, number_of_cols)
-    cv2.imwrite('tests/output_images/image1.jpg', new_image)
+    cv2.imwrite('tests/output_images/image3.jpg', new_image)
