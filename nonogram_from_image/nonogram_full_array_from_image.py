@@ -3,6 +3,7 @@
 import os
 import cv2
 import numpy as np
+import pytesseract
 
 
 def get_image(path):
@@ -191,7 +192,9 @@ def draw_improved_grid_lines(image, num_rows, num_cols):
 
 def check_cell_for_number(cell):
     """Checks cell for number"""
-    return cell
+    pytesseract.pytesseract.tesseract_cmd = "Tesseract-OCR/tesseract"
+    number = pytesseract.image_to_string(cell)
+    return number
 
 
 def get_cell_from_grid(image, num_rows, num_cols):
@@ -222,7 +225,5 @@ if __name__ == "__main__":
     removed_grid_lines = remove_grid_lines(transformed_image)
     number_of_rows, number_of_cols = get_num_rows_cols_from_image(
         transformed_image)
-    new_image = draw_improved_grid_lines(
-        removed_grid_lines, number_of_rows, number_of_cols)
-
-    cv2.imwrite('tests/output_images/image3.jpg', new_image)
+    finished_array = get_cell_from_grid(transformed_image, number_of_rows, number_of_cols)
+    print(finished_array)
