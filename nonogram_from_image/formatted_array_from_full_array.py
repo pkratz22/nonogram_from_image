@@ -1,5 +1,13 @@
 """Convert array of entire grid to row/col arrays"""
 
+def organize_array_by_rows(unformatted_array, num_cols):
+    """Take unformatted array and make grid array"""
+    num_rows = len(unformatted_array) / num_cols
+    grid_array = []
+    for row in range(num_rows):
+        grid_array.append(unformatted_array[row * num_cols:(row + 1) * num_cols - 1])
+    return grid_array
+
 
 def get_num_rows_cols(grid_array):
     """Get number of rows that have col data"""
@@ -54,8 +62,9 @@ def get_teal_string(vertical, horizontal):
     return '{"ver":' + ver_string + ',"hor":' + hor_string + '}'
 
 
-def main(grid_array):
+def main(unformatted_array, num_cols):
     """Given grid_array, return teal array"""
+    grid_array = organize_array_by_rows(unformatted_array, num_cols)
     transposed_array = list(map(list, zip(*grid_array)))
     num_rows = get_num_rows_cols(grid_array)
     num_cols = get_num_rows_cols(transposed_array)
@@ -67,13 +76,87 @@ def main(grid_array):
 
 if __name__ == "__main__":
     # array = input("Please enter array: ")
-    array = [["", "", "", "", 1, "", "", 1, ""],
-             ["", "", "", "", 1, 4, 4, 1, ""],
-             ["", "", "", 4, 2, 1, 1, 2, 4],
-             ["", "", 4, "", "", "", "", "", ""],
-             [1, 2, 1, "", "", "", "", "", ""],
-             ["", "", 6, "", "", "", "", "", ""],
-             [1, 2, 1, "", "", "", "", "", ""],
-             ["", 2, 2, "", "", "", "", "", ""],
-             ["", "", 4, "", "", "", "", "", ""]]
-    print(main(array))
+    number_of_cols = 9
+    array = [
+        "",
+        "",
+        "",
+        "",
+        1,
+        "",
+        "",
+        1,
+        "",
+        "",
+        "",
+        "",
+        "",
+        1,
+        4,
+        4,
+        1,
+        "",
+        "",
+        "",
+        "",
+        4,
+        2,
+        1,
+        1,
+        2,
+        4,
+        "",
+        "",
+        4,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        1,
+        2,
+        1,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        6,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        1,
+        2,
+        1,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        2,
+        2,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        4,
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""]
+    print(main(array, number_of_cols))

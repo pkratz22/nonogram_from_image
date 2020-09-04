@@ -189,6 +189,30 @@ def draw_improved_grid_lines(image, num_rows, num_cols):
     return image
 
 
+def check_cell_for_number(cell):
+    """Checks cell for number"""
+    return cell
+
+
+def get_cell_from_grid(image, num_rows, num_cols):
+    """Gets cells from grid"""
+    row_height = image.shape[0] / num_rows
+    col_width = image.shape[1] / num_cols
+    final_array = []
+    for row in range(num_rows):
+        for col in range(num_cols):
+            cell = image[row *
+                         row_height:min((row +
+                                         1) *
+                                        row_height, image.shape[1]), col *
+                         col_width:min((col +
+                                        1) *
+                                       col_width, image.shape[0])]
+            number = check_cell_for_number(cell)
+            final_array.append(number)
+    return final_array
+
+
 if __name__ == "__main__":
     #nonogram_image_path = input("Please enter path to image file: ")
     NONOGRAM_IMAGE_PATH = "tests/input_images/image3.jpg"
@@ -200,4 +224,5 @@ if __name__ == "__main__":
         transformed_image)
     new_image = draw_improved_grid_lines(
         removed_grid_lines, number_of_rows, number_of_cols)
+
     cv2.imwrite('tests/output_images/image3.jpg', new_image)
