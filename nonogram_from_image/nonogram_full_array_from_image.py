@@ -205,12 +205,13 @@ def get_array_from_grid(image, num_rows, num_cols):
     for row in range(num_rows):
         for col in range(num_cols):
             cell = image[int(row *
-                         row_height):int(min((row +
-                                         1) *
-                                        row_height, image.shape[1])), int(col *
-                         col_width):int(min((col +
-                                        1) *
-                                       col_width, image.shape[0]))]
+                             row_height):int(min((row +
+                                                  1) *
+                                                 row_height, image.shape[1])),
+                         int(col *
+                             col_width):int(min((col +
+                                                 1) *
+                                                col_width, image.shape[0]))]
             number = check_cell_for_number(cell)
             final_array.append(number)
     return final_array
@@ -225,5 +226,6 @@ if __name__ == "__main__":
     removed_grid_lines = remove_grid_lines(transformed_image)
     number_of_rows, number_of_cols = get_num_rows_cols_from_image(
         transformed_image)
-    finished_array = get_array_from_grid(transformed_image, number_of_rows, number_of_cols)
+    finished_array = get_array_from_grid(
+        transformed_image, number_of_rows, number_of_cols)
     print(finished_array)
