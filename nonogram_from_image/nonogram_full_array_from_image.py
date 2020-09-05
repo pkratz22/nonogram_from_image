@@ -199,6 +199,9 @@ def check_cell_for_number(cell):
 
 def get_array_from_grid(image, num_rows, num_cols):
     """Gets cells from grid"""
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    image = cv2.threshold(
+        image, 150, 255, cv2.THRESH_BINARY)[1]
     row_height = image.shape[0] / num_rows
     col_width = image.shape[1] / num_cols
     final_array = []
@@ -207,18 +210,22 @@ def get_array_from_grid(image, num_rows, num_cols):
             cell = image[int(row *
                              row_height):int(min((row +
                                                   1) *
-                                                 row_height, image.shape[1])),
+                                                 row_height, image.shape[0])),
                          int(col *
                              col_width):int(min((col +
                                                  1) *
-                                                col_width, image.shape[0]))]
+                                                col_width, image.shape[1]))]
+            cv2.imshow('cell', cell)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
             number = check_cell_for_number(cell)
             final_array.append(number)
+            print(final_array)
     return final_array
 
 
 if __name__ == "__main__":
-    #nonogram_image_path = input("Please enter path to image file: ")
+    # nonogram_image_path = input("Please enter path to image file: ")
     NONOGRAM_IMAGE_PATH = "tests/input_images/image1.jpg"
     nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
     nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
