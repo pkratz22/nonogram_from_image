@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 import pytesseract
 
+CUSTOM_CONFIG = r'--oem 3 --psm 6 outputbase digits'
+
 
 def get_image(path):
     """Get image given path"""
@@ -16,10 +18,15 @@ def get_image_name(path):
     return os.path.basename(path)
 
 
+def get_grayscale(image):
+    """Grayscale image"""
+    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+
 def base_transformation(image):
     """Complete base transformations"""
     # make image gray
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray = get_grayscale(image)
 
     # apply Gaussian Blur to reduce noise
     image_blurred = cv2.GaussianBlur(gray, (3, 3), 0)
@@ -193,8 +200,21 @@ def draw_improved_grid_lines(image, num_rows, num_cols):
 def check_cell_for_number(cell):
     """Checks cell for number"""
     pytesseract.pytesseract.tesseract_cmd = "Tesseract-OCR/tesseract"
-    number = pytesseract.image_to_string(cell)
+    number = pytesseract.image_to_string(cell, config=CUSTOM_CONFIG)
+    if number != "":
+        number = int(number)
     return number
+
+
+def remove_noise(image):
+    """Remove noise"""
+    return cv2.medianBlur(image, 3)
+
+
+def opening(image):
+    """Opening"""
+    kernel = np.ones((1, 3), np.uint8)
+    return cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
 
 
 def get_array_from_grid(image, num_rows, num_cols):
@@ -212,16 +232,97 @@ def get_array_from_grid(image, num_rows, num_cols):
                                                   1) *
                                                  row_height, image.shape[0])),
                          int(col *
-                             col_width):int(min((col +
-                                                 1) *
-                                                col_width, image.shape[1]))]
-            cv2.imshow('cell', cell)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-            number = check_cell_for_number(cell)
+                             col_width)+4:int(min((col +
+                                                   1) *
+                                                  col_width, image.shape[1]))-2]
+
+            rnoise = remove_noise(cell)
+            processed_cell = opening(rnoise)
+            number = check_cell_for_number(processed_cell)
             final_array.append(number)
-            print(final_array)
     return final_array
+
+
+def organize_array_by_rows(unformatted_array, num_cols):
+    """Take unformatted array and make grid array"""
+    num_rows = int(len(unformatted_array) / num_cols)
+    array = []
+    for row in range(num_rows):
+        array.append(unformatted_array[row * num_cols:(row + 1) * num_cols])
+    return array
+
+
+def fix_array(array):
+    """Have user manually fix any errors from OCR"""
+    fixed = False
+    while not fixed:
+        is_fixed = input("Enter Y if grid is correct")
+        if is_fixed.lower() == "y":
+            fixed = True
+            break
+        row = int(input("Enter row of incorrect cell"))
+        col = int(input("Enter col of incorrect cell"))
+        print("Incorrect cell currently reads: " + array[row-1][col-1])
+        to_change = input("Enter y to change cell")
+        if to_change.lower() == "y":
+            new_cell = input("Enter correct cell entry. If blank, press enter")
+            if new_cell != "":
+                new_cell = int(new_cell)
+            array[row-1][col-1] = new_cell
+    return array
+
+
+def get_num_rows_cols(array):
+    """Get number of rows that have col data"""
+    row_number = 0
+    is_last_row = False
+    while not is_last_row:
+        is_last_row = check_if_last_row(array, row_number)
+        row_number += 1
+    return row_number
+
+
+def check_if_last_row(array, row_number):
+    """Loop through row for get_num_rows_cols"""
+    for cell in range(len(array[row_number])):
+        if array[row_number][cell] != "":
+            if array[row_number + 1][cell] != "":
+                return False
+    return True
+
+
+def get_row_col_array(array, rows_skipped):
+    """Get col array from grid"""
+    ver_hor_array = []
+    total_rows = len(array)
+    for row in range(rows_skipped, total_rows):
+        individual_row_array = []
+        for cell in range(len(array[row])):
+            if array[row][cell] != "":
+                individual_row_array.append(array[row][cell])
+        ver_hor_array.append(individual_row_array)
+    return ver_hor_array
+
+
+def get_ver_hor_array_as_string(ver_hor_array):
+    """Gets vertical or horizontal array as string"""
+    ver_hor_string = '['
+    for row_num, _ in enumerate(ver_hor_array):
+        ver_hor_string += '['
+        for cell in range(len(ver_hor_array[row_num])):
+            ver_hor_string += str(ver_hor_array[row_num][cell]) + ','
+        ver_hor_string = ver_hor_string[:-1]
+        ver_hor_string += '],'
+    ver_hor_string = ver_hor_string[:-1]
+    ver_hor_string += ']'
+    return ver_hor_string
+
+
+def get_teal_string(vertical, horizontal):
+    """Formats string for use in teal online tool"""
+    ver_string = get_ver_hor_array_as_string(vertical)
+    hor_string = get_ver_hor_array_as_string(horizontal)
+    return '{"ver":' + ver_string + ',"hor":' + hor_string + '}'
 
 
 if __name__ == "__main__":
@@ -235,4 +336,12 @@ if __name__ == "__main__":
         transformed_image)
     finished_array = get_array_from_grid(
         transformed_image, number_of_rows, number_of_cols)
-    print(finished_array)
+    grid_array = organize_array_by_rows(finished_array, number_of_cols)
+    corrected_grid_array = fix_array(grid_array)
+    transposed_array = list(map(list, zip(*corrected_grid_array)))
+    NUM_ROWS = get_num_rows_cols(grid_array)
+    NUM_COLS = get_num_rows_cols(transposed_array)
+    ver_array = get_row_col_array(grid_array, NUM_COLS)
+    hor_array = get_row_col_array(transposed_array, NUM_ROWS)
+    teal_string = get_teal_string(ver_array, hor_array)
+    print(teal_string)
