@@ -232,9 +232,9 @@ def get_array_from_grid(image, num_rows, num_cols):
                                                   1) *
                                                  row_height, image.shape[0])),
                          int(col *
-                             col_width)+4:int(min((col +
-                                                   1) *
-                                                  col_width, image.shape[1]))-2]
+                             col_width) + 4:int(min((col +
+                                                     1) *
+                                                    col_width, image.shape[1])) - 2]
 
             rnoise = remove_noise(cell)
             processed_cell = opening(rnoise)
@@ -267,24 +267,26 @@ def fix_array(array):
             row = input("Enter row of incorrect cell \n")
             if not row.isdigit():
                 print("Digit not entered, will start again \n")
+                break
+            for index, col in enumerate(array[row - 1]):
+                print("Position - " + str(index + 1) + ", Value - " + str(col))
+            col = input("Enter position of incorrect cell \n")
+            if not col.isdigit():
+                print("Digit not entered, will start again \n")
+                break
+            print("Incorrect cell currently reads: " +
+                  str(array[row - 1][int(col) - 1]) + "\n")
+            to_change = input("Enter Y to change cell. Else enter N. \n")
+            if to_change.lower() == "y":
+                new_cell = input(
+                    "Enter correct cell entry. If blank, press enter \n")
+                if new_cell != "":
+                    new_cell = int(new_cell)
+                array[row - 1][int(col) - 1] = new_cell
+            elif to_change.lower() == "n":
+                print("Cell correct, will start again \n")
             else:
-                for index, col in enumerate(array[row-1]):
-                    print("Position - " + str(index + 1) + ", Value - " + str(col))
-                col = input("Enter position of incorrect cell \n")
-                if not col.isdigit():
-                    print("Digit not entered, will start again \n")
-                else:
-                    print("Incorrect cell currently reads: " + str(array[row-1][int(col)-1]) + "\n")
-                    to_change = input("Enter Y to change cell. Else enter N. \n")
-                    if to_change.lower() == "y":
-                        new_cell = input("Enter correct cell entry. If blank, press enter \n")
-                        if new_cell != "":
-                            new_cell = int(new_cell)
-                        array[row-1][int(col)-1] = new_cell
-                    elif to_change.lower() == "n":
-                        print("Cell correct, will start again \n")
-                    else:
-                        print("Invalid input, will start again \n")
+                print("Invalid input, will start again \n")
         else:
             print("Invalid input, will start again \n")
     return array
