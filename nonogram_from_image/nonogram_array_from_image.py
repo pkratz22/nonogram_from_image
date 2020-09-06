@@ -264,23 +264,29 @@ def fix_array(array):
         if is_fixed.lower() == "y":
             fixed = True
         elif is_fixed.lower() == "n":
-            row = int(input("Enter row of incorrect cell \n"))
-            for index, col in enumerate(array[row]):
-                print("Position - " + str(index + 1) + ", Value - " + str(col))
-            col = int(input("Enter position of incorrect cell \n"))
-            print("Incorrect cell currently reads: " + array[row-1][col-1])
-            to_change = input("Enter Y to change cell. Else enter N. \n")
-            if to_change.lower() == "y":
-                new_cell = input("Enter correct cell entry. If blank, press enter \n")
-                if new_cell != "":
-                    new_cell = int(new_cell)
-                array[row-1][col-1] = new_cell
-            elif to_change.lower() == "n":
-                print("Cell correct, will start again \n")
+            row = input("Enter row of incorrect cell \n")
+            if not row.isdigit():
+                print("Digit not entered, will start again \n")
             else:
-                print("Invalid input, will try again \n")
+                for index, col in enumerate(array[row-1]):
+                    print("Position - " + str(index + 1) + ", Value - " + str(col))
+                col = input("Enter position of incorrect cell \n")
+                if not col.isdigit():
+                    print("Digit not entered, will start again \n")
+                else:
+                    print("Incorrect cell currently reads: " + str(array[row-1][int(col)-1]) + "\n")
+                    to_change = input("Enter Y to change cell. Else enter N. \n")
+                    if to_change.lower() == "y":
+                        new_cell = input("Enter correct cell entry. If blank, press enter \n")
+                        if new_cell != "":
+                            new_cell = int(new_cell)
+                        array[row-1][int(col)-1] = new_cell
+                    elif to_change.lower() == "n":
+                        print("Cell correct, will start again \n")
+                    else:
+                        print("Invalid input, will start again \n")
         else:
-            print("Invalid input, will try again \n")
+            print("Invalid input, will start again \n")
     return array
 
 
