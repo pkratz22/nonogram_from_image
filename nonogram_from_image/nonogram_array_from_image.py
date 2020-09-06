@@ -276,17 +276,14 @@ def fix_array(array):
                 break
             print("Incorrect cell currently reads: " +
                   str(array[row - 1][int(col) - 1]) + "\n")
-            to_change = input("Enter Y to change cell. Else enter N. \n")
-            if to_change.lower() == "y":
-                new_cell = input(
-                    "Enter correct cell entry. If blank, press enter \n")
-                if new_cell != "":
-                    new_cell = int(new_cell)
-                array[row - 1][int(col) - 1] = new_cell
-            elif to_change.lower() == "n":
-                print("Cell correct, will start again \n")
-            else:
-                print("Invalid input, will start again \n")
+            new_cell = input(
+                "Enter correct cell entry. If blank, press enter \n")
+            if not new_cell.isdigit() and new_cell != "":
+                print("Entry is not digit or blank, will start again \n")
+                break
+            if new_cell.isdigit():
+                new_cell = int(new_cell)
+            array[row - 1][int(col) - 1] = new_cell
         else:
             print("Invalid input, will start again \n")
     return array
