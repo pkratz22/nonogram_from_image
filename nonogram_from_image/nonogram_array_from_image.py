@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 import pytesseract
 
+
 CUSTOM_CONFIG = r'--oem 3 --psm 6 outputbase digits'
 
 
@@ -258,8 +259,8 @@ def fix_array(array):
     while not fixed:
         for row in array:
             for col in row:
-                print(col, end=" ")
-            print("\n")
+                print(str(col) + (2 - len(str(col))) * " " + "|", end=" ")
+            print("\n" + ((len(row) * 4) * "-") + "\n")
         is_fixed = input("Enter Y if grid is correct. Else enter N. \n")
         if is_fixed.lower() == "y":
             fixed = True
