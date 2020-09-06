@@ -1,1 +1,6 @@
-1. Debug
+1. Debug full run of test cases
+2. Once working, see if able to do it without cropping each image to save time
+3. Debug again
+4. Add feature for solving puzzle
+5. Debug again
+6. Work on improving digit detection
