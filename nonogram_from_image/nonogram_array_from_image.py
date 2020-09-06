@@ -256,19 +256,31 @@ def fix_array(array):
     """Have user manually fix any errors from OCR"""
     fixed = False
     while not fixed:
-        is_fixed = input("Enter Y if grid is correct")
+        for row in array:
+            for col in row:
+                print(col, end=" ")
+            print("\n")
+        is_fixed = input("Enter Y if grid is correct. Else enter N. \n")
         if is_fixed.lower() == "y":
             fixed = True
-            break
-        row = int(input("Enter row of incorrect cell"))
-        col = int(input("Enter col of incorrect cell"))
-        print("Incorrect cell currently reads: " + array[row-1][col-1])
-        to_change = input("Enter y to change cell")
-        if to_change.lower() == "y":
-            new_cell = input("Enter correct cell entry. If blank, press enter")
-            if new_cell != "":
-                new_cell = int(new_cell)
-            array[row-1][col-1] = new_cell
+        elif is_fixed.lower() == "n":
+            row = int(input("Enter row of incorrect cell \n"))
+            for index, col in enumerate(array[row]):
+                print("Position - " + str(index + 1) + ", Value - " + str(col))
+            col = int(input("Enter position of incorrect cell \n"))
+            print("Incorrect cell currently reads: " + array[row-1][col-1])
+            to_change = input("Enter Y to change cell. Else enter N. \n")
+            if to_change.lower() == "y":
+                new_cell = input("Enter correct cell entry. If blank, press enter \n")
+                if new_cell != "":
+                    new_cell = int(new_cell)
+                array[row-1][col-1] = new_cell
+            elif to_change.lower() == "n":
+                print("Cell correct, will start again \n")
+            else:
+                print("Invalid input, will try again \n")
+        else:
+            print("Invalid input, will try again \n")
     return array
 
 
