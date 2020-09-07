@@ -114,67 +114,6 @@ def get_num_rows_cols_from_image(image):
     return num_rows, num_cols
 
 
-def remove_horizontal_grid_lines(image):
-    """Remove horizontal grid lines from image"""
-    thresh = get_binary_image(image)[1]
-
-    # Remove horizontal
-    horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 1))
-    detected_lines = cv2.morphologyEx(
-        thresh,
-        cv2.MORPH_OPEN,
-        horizontal_kernel,
-        iterations=2)
-    contours = cv2.findContours(
-        detected_lines,
-        cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE)
-    contours = contours[0] if len(contours) == 2 else contours[1]
-    for contour in contours:
-        cv2.drawContours(image, [contour], -1, (255, 255, 255), 2)
-
-    # Repair image
-    repair_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 6))
-    result = 255 - cv2.morphologyEx(255 - image,
-                                    cv2.MORPH_CLOSE,
-                                    repair_kernel,
-                                    iterations=1)
-
-    return result
-
-
-def remove_vertical_grid_lines(image):
-    """Remove vertical grid lines from image"""
-    thresh = get_binary_image(image)[1]
-
-    # Remove vertical
-    vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 25))
-    detected_lines = cv2.morphologyEx(
-        thresh, cv2.MORPH_OPEN, vertical_kernel, iterations=2)
-    contours = cv2.findContours(
-        detected_lines,
-        cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE)
-    contours = contours[0] if len(contours) == 2 else contours[1]
-    for contour in contours:
-        cv2.drawContours(image, [contour], -1, (255, 255, 255), 2)
-
-    # Repair image
-    repair_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (6, 1))
-    result = 255 - cv2.morphologyEx(255 - image,
-                                    cv2.MORPH_CLOSE,
-                                    repair_kernel,
-                                    iterations=1)
-    return result
-
-
-def remove_grid_lines(image):
-    """Remove all grid lines"""
-    image_minus_horizontal = remove_horizontal_grid_lines(image)
-    image_minus_gridlines = remove_vertical_grid_lines(image_minus_horizontal)
-    return image_minus_gridlines
-
-
 def draw_improved_grid_lines(image, num_rows, num_cols):
     """Draws single pixel grid lines with no noise to get contours from"""
     row_height = image.shape[0] / num_rows
@@ -343,13 +282,13 @@ def get_teal_string(vertical, horizontal):
     return '{"ver":' + ver_string + ',"hor":' + hor_string + '}'
 
 
-if __name__ == "__main__":
+def main():
+    """Main function"""
     # nonogram_image_path = input("Please enter path to image file: ")
-    NONOGRAM_IMAGE_PATH = "tests/input_images/image1.jpg"
-    nonogram_image = get_image(NONOGRAM_IMAGE_PATH)
-    nonogram_image_name = get_image_name(NONOGRAM_IMAGE_PATH)
+    nonogram_image_path = "tests/input_images/image1.jpg"
+    nonogram_image = get_image(nonogram_image_path)
+    # nonogram_image_name = get_image_name(nonogram_image_path)
     transformed_image = transform_image(nonogram_image)
-    removed_grid_lines = remove_grid_lines(transformed_image)
     number_of_rows, number_of_cols = get_num_rows_cols_from_image(
         transformed_image)
     finished_array = get_array_from_grid(
@@ -357,9 +296,12 @@ if __name__ == "__main__":
     grid_array = organize_array_by_rows(finished_array, number_of_cols)
     corrected_grid_array = fix_array(grid_array)
     transposed_array = list(map(list, zip(*corrected_grid_array)))
-    NUM_ROWS = get_num_rows_cols(grid_array)
-    NUM_COLS = get_num_rows_cols(transposed_array)
-    ver_array = get_row_col_array(grid_array, NUM_COLS)
-    hor_array = get_row_col_array(transposed_array, NUM_ROWS)
+    num_rows = get_num_rows_cols(grid_array)
+    num_cols = get_num_rows_cols(transposed_array)
+    ver_array = get_row_col_array(grid_array, num_cols)
+    hor_array = get_row_col_array(transposed_array, num_rows)
     teal_string = get_teal_string(ver_array, hor_array)
-    print(teal_string)
+    return teal_string
+
+if __name__ == "__main__":
+    main()
