@@ -1,9 +1,8 @@
-1. Error to fix: When entering position of digit in row, if non-digit is entered, program ends
-2. Debug - full run with image1 example
-3. Add GUI for when users are editting grid
-4. Debug - full run with image1, image2, and image3 examples
-5. Allow user to run program on folder of images
-6. Debug again
-7. Add solving feature
-8. Debug again
-9. Work on improving digit recognition
+1. Debug - full run with image1 example
+2. Add GUI for when users are editting grid
+3. Debug - full run with image1, image2, and image3 examples
+4. Allow user to run program on folder of images
+5. Debug again
+6. Add solving feature
+7. Debug again
+8. Work on improving digit recognition
