@@ -219,7 +219,7 @@ def fix_array(array):
                 print("Digit not entered, will start again \n")
                 continue
             col = int(col)
-            if not 0 < col < len(array[row - 1]):
+            if not 0 < col < len(array[row]):
                 print("Digit out of bounds, start again")
                 continue
             print("Incorrect cell currently reads: " +
