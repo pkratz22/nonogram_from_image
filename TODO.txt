@@ -1,6 +1,9 @@
-1. Debug full run of test cases
-2. Once working, see if able to do it without cropping each image to save time
-3. Debug again
-4. Add feature for solving puzzle
-5. Debug again
-6. Work on improving digit detection
+1. Error to fix: When entering position of digit in row, if non-digit is entered, program ends
+2. Debug - full run with image1 example
+3. Add GUI for when users are editting grid
+4. Debug - full run with image1, image2, and image3 examples
+5. Allow user to run program on folder of images
+6. Debug again
+7. Add solving feature
+8. Debug again
+9. Work on improving digit recognition
