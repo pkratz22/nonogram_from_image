@@ -209,6 +209,9 @@ def fix_array(array):
                 print("Digit not entered, will start again \n")
                 continue
             row = int(row)
+            if not 0 < row < len(array):
+                print("Digit out of bounds, start again")
+                continue
             for index, col in enumerate(array[row - 1]):
                 print("Position - " + str(index + 1) + ", Value - " + str(col))
             col = input("Enter position of incorrect cell \n")
@@ -216,6 +219,9 @@ def fix_array(array):
                 print("Digit not entered, will start again \n")
                 continue
             col = int(col)
+            if not 0 < col < len(array[row - 1]):
+                print("Digit out of bounds, start again")
+                continue
             print("Incorrect cell currently reads: " +
                   str(array[row - 1][int(col) - 1]) + "\n")
             new_cell = input(
