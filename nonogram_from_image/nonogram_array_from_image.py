@@ -207,20 +207,20 @@ def fix_array(array):
             row = input("Enter row of incorrect cell \n")
             if not row.isdigit():
                 print("Digit not entered, will start again \n")
-                break
+                continue
             for index, col in enumerate(array[row - 1]):
                 print("Position - " + str(index + 1) + ", Value - " + str(col))
             col = input("Enter position of incorrect cell \n")
             if not col.isdigit():
                 print("Digit not entered, will start again \n")
-                break
+                continue
             print("Incorrect cell currently reads: " +
                   str(array[row - 1][int(col) - 1]) + "\n")
             new_cell = input(
                 "Enter correct cell entry. If blank, press enter \n")
             if not new_cell.isdigit() and new_cell != "":
                 print("Entry is not digit or blank, will start again \n")
-                break
+                continue
             if new_cell.isdigit():
                 new_cell = int(new_cell)
             array[row - 1][int(col) - 1] = new_cell
