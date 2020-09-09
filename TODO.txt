@@ -1,5 +1,4 @@
 1. Debug - full run with image1 example
-    * Fix if index entered is out of range
 2. Add GUI for when users are editting grid
 3. Debug - full run with image1, image2, and image3 examples
 4. Allow user to run program on folder of images
