@@ -208,12 +208,14 @@ def fix_array(array):
             if not row.isdigit():
                 print("Digit not entered, will start again \n")
                 continue
+            row = int(row)
             for index, col in enumerate(array[row - 1]):
                 print("Position - " + str(index + 1) + ", Value - " + str(col))
             col = input("Enter position of incorrect cell \n")
             if not col.isdigit():
                 print("Digit not entered, will start again \n")
                 continue
+            col = int(col)
             print("Incorrect cell currently reads: " +
                   str(array[row - 1][int(col) - 1]) + "\n")
             new_cell = input(
